@@ -1,0 +1,94 @@
+entity Operation {
+	name String required,
+    operationTime Integer required,
+    price Double required
+}
+
+entity Skill {
+    priority Integer required
+}
+entity ScheduledTask {
+    startTime Instant required,
+	endTime Instant,
+}
+relationship OneToOne {
+    Client{user} to User,
+    Employee{user} to User,
+}
+
+
+// an ignored comment
+/** not an ignored comment */
+entity Client {
+	firstName String required,
+	lastName String required,
+	email String required,
+	mobile String required,
+    city String required, 
+    birthDate Instant,
+    gender Gender
+}
+
+entity Employee {
+	firstName String required,
+	lastName String required,
+	email String required,
+	mobile String required,
+    birthDate Instant required,
+    gender Gender required
+}
+
+
+
+entity Appointment {
+	startTime Instant required,
+	endTime Instant required,
+}
+
+enum Gender {
+    MALE, FEMALE
+}
+
+
+/**
+ * The Employee entity.
+ */
+ entity Technique {
+ 	name String,
+	price Double ,
+    aggregatedTime Integer
+ }
+
+
+relationship ManyToMany {
+	Technique{operations} to Operation,
+}
+
+// defining multiple OneToMany relationships with comments
+relationship OneToMany {
+	Employee{skills} to Skill,
+	Employee{scheduledTasks} to ScheduledTask
+}
+
+relationship ManyToOne {
+    Skill{operation} to Operation,
+    Appointment{client} to Client,
+    Appointment{technique} to Technique,
+    ScheduledTask{client} to Client,
+    ScheduledTask{operation} to Operation,
+    ScheduledTask{employee} to Employee
+}
+
+
+// Set pagination options
+paginate Client  with infinite-scroll
+paginate Appointment with pagination
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl except Employee, Client, Skill
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
